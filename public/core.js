@@ -9,6 +9,22 @@ calendarApp.controller('mainController', ['$scope', '$q', '$http', 'moment', fun
 
 }]);
 
+$scope.generateCalendarList = function(startFrom, totalDays, countryCode) {
+		const startDate = moment(startFrom, "DD-MM-YYYY");
+					
+		//Calculating end date for the calendars
+		const endDate = startDate.clone().add(totalDays+1, "day");
+		const diffStart = moment([startDate.year(), startDate.month(), startDate.date()+1]);
+		const diffEnd = moment([endDate.year(), endDate.month(), endDate.date()+1]);
+		const monthsQty = diffEnd.diff(diffStart, 'months', true) // calculates how many months are going to be rendered
+
+		console.log(monthsQty);
+
+		$scope.calendarList = [];
+			
+		
+};
+
 //calendar directive for the rendered widget
 calendarApp.directive('calendarWidget', function () {
     return {
@@ -26,6 +42,19 @@ calendarApp.directive('calendarWidget', function () {
 
         	//full calendar config object
 			$scope.uiConfig = {
+		      calendar:{
+		        height: 350,
+		        editable: true,
+		        header:{
+		          left: '',
+		          center: 'title',
+		          right: ''
+		        },
+		        validRange: {
+		        	start: startDate,
+		        	end: endDate
+		    	}
+		      }
     		};
         } 
     }
