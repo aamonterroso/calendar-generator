@@ -8,6 +8,14 @@ var app = express();
 
 app.use(express.static(__dirname + "/public"));
 
+// GET route to query holidays by country
+app.get('/getHolidays/:countryCode/:year', function(req, res, next) {
+	const countryCode = req.params.countryCode;
+	const year = req.params.year;
+	console.log(countryCode);
+	console.log(year);
+});
+
 app.listen(process.env.PORT || 3000, function(){
   console.log("CalendarApp listening on port %d in %s mode", this.address().port, app.settings.env);
 });
