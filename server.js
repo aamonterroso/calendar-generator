@@ -7,6 +7,7 @@ var api = new HolidayAPI('064704d8-7c3e-49b4-93e1-a2443029fa3a').v1;
 var app = express();
 
 app.use(express.static(__dirname + "/public"));
+// app.set('view engine', 'html');
 
 // GET route to query holidays by country
 app.get('/getHolidays/:countryCode/:year', function(req, res, next) {
@@ -32,6 +33,13 @@ app.get('/getHolidays/:countryCode/:year', function(req, res, next) {
 				break;
 		}
 	});
+});
+
+//express error handling
+app.use(function (err, req, res, next) {
+	res.status(err.status || 500);
+	console.error(err.stack)
+	res.send({error : err});
 });
 
 app.listen(process.env.PORT || 3000, function(){
