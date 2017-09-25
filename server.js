@@ -12,8 +12,26 @@ app.use(express.static(__dirname + "/public"));
 app.get('/getHolidays/:countryCode/:year', function(req, res, next) {
 	const countryCode = req.params.countryCode;
 	const year = req.params.year;
-	console.log(countryCode);
-	console.log(year);
+	let apiParams = { country: countryCode, year: 2017, pretty: true};
+	if(!countryCode || !year) res.status(500).send({error: "empty / null API parameters", data: "error"});
+
+	api.holidays(apiParams, function (err, data) {
+		if(err) {
+			console.error(err);
+			return next(err); 
+		}
+		switch (data.status) {
+			case 200 : 
+				res.json(data);
+				break;
+			case 400 :
+				res.status(400).send({error: "invalid api call", data: data});
+				break;
+			case 429 :
+				res.status(429).send({error: "API Rate Limit Exceeded", data: data});
+				break;
+		}
+	});
 });
 
 app.listen(process.env.PORT || 3000, function(){

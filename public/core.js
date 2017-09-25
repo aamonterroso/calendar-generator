@@ -25,6 +25,24 @@ $scope.generateCalendarList = function(startFrom, totalDays, countryCode) {
 		
 };
 
+function getCountryHolidays(countryCode, year) {
+	try {
+		return $http.get("/getHolidays/"+countryCode+"/"+year).then(function (response){
+			if(response.status == 200) { //success
+				let holidaysList = Object.values(response.data.holidays);
+				for(let key in holidaysList) {
+					let current = holidaysList[key][0];
+					$scope.holidays.push(current);
+				}
+				response.dataReady = $scope.holidays;
+			}			
+			return response;
+		}, function (error){
+			console.error(error);
+		});
+	} catch (error){ console.error(error); }
+};
+
 //calendar directive for the rendered widget
 calendarApp.directive('calendarWidget', function () {
     return {
